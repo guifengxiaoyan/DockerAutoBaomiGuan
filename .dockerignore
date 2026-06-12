@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+credentials.json
+.git
+.gitignore
+*.md
+*.log
+.vscode/
+.idea/
+node_modules/
+package-lock.json
+.DS_Store

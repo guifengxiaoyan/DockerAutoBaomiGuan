@@ -12,19 +12,56 @@
 
 ## 快速开始
 
-### 安装依赖
+### 方式一：Docker 部署（推荐）
+
+#### 使用 Docker Compose
+
+```bash
+docker compose up -d
+```
+
+#### 使用 Docker 命令
+
+```bash
+# 构建镜像
+docker build -t guifengxiaoyan/autobaomiguan:latest .
+
+# 运行容器
+docker run -d \
+  --name autobaomiguan \
+  -p 3000:3000 \
+  -v $(pwd)/credentials.json:/app/credentials.json \
+  --restart unless-stopped \
+  guifengxiaoyan/autobaomiguan:latest
+```
+
+#### 使用 GitHub Actions 自动构建的镜像
+
+```bash
+docker pull guifengxiaoyan/autobaomiguan:latest
+docker run -d \
+  --name autobaomiguan \
+  -p 3000:3000 \
+  -v $(pwd)/credentials.json:/app/credentials.json \
+  --restart unless-stopped \
+  guifengxiaoyan/autobaomiguan:latest
+```
+
+访问 http://localhost:3000 即可使用。
+
+### 方式二：Python 直接运行
+
+#### 安装依赖
 
 ```bash
 pip install -r requirements.txt flask flask-cors --break-system-packages
 ```
 
-### 启动服务
+#### 启动服务
 
 ```bash
 python3 app.py
 ```
-
-访问 http://localhost:3000 即可使用。
 
 ## 使用说明
 
