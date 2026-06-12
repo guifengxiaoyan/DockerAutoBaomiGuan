@@ -1,163 +1,92 @@
-# DockerAutoBaomiGuan - 保密观自动刷课 Docker 版
+# AutoBaomiGuan Web - 保密观自动刷课 Web 版
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/guifengxiaoyan/autobaomiguan.svg)](https://hub.docker.com/r/guifengxiaoyan/autobaomiguan)
-[![Docker Image Size](https://img.shields.io/docker/image-size/guifengxiaoyan/autobaomiguan/latest)](https://hub.docker.com/r/guifengxiaoyan/autobaomiguan)
+基于 [AutoBaomiGuan](https://github.com/vay1314/AutoBaomiGuan) 项目开发的在线 Web 版本。
 
-## 项目介绍
+## 功能特性
 
-本项目是 [AutoBaomiGuan](https://github.com/vay1314/AutoBaomiGuan) 的 Docker 容器化版本，提供 Web 界面，支持多账号管理和自动刷课考试。
+- 多账号登录，token 自动缓存
+- 一键学习所有课程
+- 自动完成考试（满分）
+- 实时学习日志
+- 简洁的 Web 界面
 
 ## 快速开始
 
-### 1. 使用 Docker Hub 镜像（推荐）
+### 安装依赖
 
 ```bash
-docker run -d \
-  -p 3000:3000 \
-  -v $(pwd)/credentials.json:/app/credentials.json \
-  --name autobaomiguan \
-  --restart unless-stopped \
-  guifengxiaoyan/autobaomiguan:latest
+pip install -r requirements.txt flask flask-cors --break-system-packages
 ```
 
-### 2. 使用 docker-compose
-
-创建 `docker-compose.yml` 文件：
-
-```yaml
-version: '3.8'
-
-services:
-  autobaomiguan:
-    image: guifengxiaoyan/autobaomiguan:latest
-    container_name: autobaomiguan
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./credentials.json:/app/credentials.json
-    restart: unless-stopped
-    environment:
-      - TZ=Asia/Shanghai
-```
-
-运行：
-```bash
-docker-compose up -d
-```
-
-### 3. 自行构建镜像
+### 启动服务
 
 ```bash
-git clone https://github.com/guifengxiaoyan/DockerAutoBaomiGuan.git
-cd DockerAutoBaomiGuan
-
-docker build -t autobaomiguan .
-docker run -d -p 3000:3000 --name autobaomiguan autobaomiguan
+python3 app.py
 ```
 
-## 使用方法
+访问 http://localhost:3000 即可使用。
 
-1. **访问 Web 界面**
-   - 打开浏览器访问 http://localhost:3000
-   - 输入保密观账号密码登录
+## 使用说明
+
+1. **登录账号**
+   - 输入保密观账号和密码
+   - 点击登录，token 会自动保存
 
 2. **开始学习**
    - 点击"开始学习和考试"按钮
-   - 系统自动完成所有课程和考试
+   - 系统会自动学习所有课程并完成考试
 
-3. **查看日志**
-   ```bash
-   docker logs -f autobaomiguan
-   ```
+3. **查看进度**
+   - 实时日志显示学习和考试进度
+   - 点击"刷新进度"更新课程状态
 
-4. **持久化凭证**
-   - 凭证文件会保存在挂载的 `credentials.json` 中
-   - 下次启动无需重新登录
+4. **切换账号**
+   - 已保存的账号会显示在登录页面
+   - 点击账号即可快速切换
 
-## 常用命令
+## 项目结构
 
-```bash
-# 启动容器
-docker-compose up -d
-
-# 查看日志
-docker logs -f autobaomiguan
-
-# 停止容器
-docker-compose down
-
-# 重启容器
-docker-compose restart
-
-# 更新镜像
-docker pull guifengxiaoyan/autobaomiguan:latest
-docker-compose down
-docker-compose up -d
+```
+/workspace
+├── app.py              # Flask 后端服务
+├── index.html          # 前端页面
+├── api_handlers.py     # API 处理函数
+├── config.py           # 配置文件
+├── login.py            # 登录模块
+├── course.py           # 课程管理模块
+├── requirements.txt    # Python 依赖
+└── README.md           # 项目说明
 ```
 
-## 环境变量
+## 配置说明
 
-| 变量 | 说明 | 默认值 |
+`config.py` 主要字段：
+
+| 字段 | 说明 | 默认值 |
 |------|------|--------|
-| TZ | 时区设置 | Asia/Shanghai |
+| `course_packet_id` | 课程 ID | 2026 年度培训 ID |
+| `CREDENTIALS_FILE` | 凭证缓存文件 | credentials.json |
 
-## 端口说明
+## API 接口
 
-- **3000**: Web 界面访问端口
-
-## 数据持久化
-
-建议挂载以下文件/目录：
-
-- `credentials.json` - 账号凭证（可选，建议挂载以保存登录状态）
-
-## 安全建议
-
-1. 不要在公共网络暴露 3000 端口
-2. 使用反向代理（如 Nginx）并配置 HTTPS
-3. 定期更新镜像获取最新的安全补丁
-
-## 故障排查
-
-### 容器无法启动
-
-```bash
-# 查看容器日志
-docker logs autobaomiguan
-
-# 检查容器状态
-docker ps -a | grep autobaomiguan
-```
-
-### 无法访问 Web 界面
-
-1. 确认容器正在运行：`docker ps`
-2. 确认端口映射正确：`docker port autobaomiguan`
-3. 检查防火墙是否阻止 3000 端口
-
-### 凭证丢失
-
-确保挂载了 credentials.json 文件：
-```bash
-docker run -v $(pwd)/credentials.json:/app/credentials.json ...
-```
-
-## 技术栈
-
-- Python 3.11
-- Flask (Web 框架)
-- Docker (容器化)
-
-## 相关项目
-
-- 源代码仓库：https://github.com/guifengxiaoyan/WEBAutoBaomiGuan
-- 原始项目：https://github.com/vay1314/AutoBaomiGuan
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/login` | POST | 用户登录 |
+| `/api/accounts` | GET | 获取已保存的账号 |
+| `/api/select-account` | POST | 切换账号 |
+| `/api/course/list` | GET | 获取课程列表 |
+| `/api/course/progress` | GET | 获取学习进度 |
+| `/api/course/study-all` | POST | 一键学习所有课程 |
 
 ## 注意事项
 
 - 本工具仅供学习交流使用
 - 请使用合法合规的账号
 - 请勿滥用工具影响平台正常运营
+
+## 相关项目
+
+- 原始项目：https://github.com/vay1314/AutoBaomiGuan
 
 ## License
 
