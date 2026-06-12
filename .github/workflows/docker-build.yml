@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: guifengxiaoyan/autobaomiguan
+  IMAGE_NAME: guifengyan/autobaomiguan
 
 jobs:
   build-and-push:
