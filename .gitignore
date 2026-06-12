@@ -174,3 +174,9 @@
 *.lz
 *.lzma
 *.iso
+credentials.json
+credentials.json
+*.pyc
+__pycache__/
+.env
+node_modules/
