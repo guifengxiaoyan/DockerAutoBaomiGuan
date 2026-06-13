@@ -86,7 +86,7 @@ def check_login(token):
 
 @app.route('/')
 def index():
-    return send_from_directory('/workspace', 'index.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/api/login', methods=['POST'])
 def api_login():
